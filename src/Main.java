@@ -240,7 +240,7 @@ public class Main {
             System.out.println("\t12) Should say true: " + pb.greaterThan(pc) + ": " + (pb.greaterThan(pc) ? "(PASS)" : "(FAIL)"));
             System.out.println("\t13) Should say true: " + pc.greaterThan(pd) + ": " + (pc.greaterThan(pd) ? "(PASS)" : "(FAIL)"));
             System.out.print("\t14) Should generate an exception with a message: ");
-            pd.greaterOrEqual(null);
+            pd.greaterThan(null);
             System.out.println(" (FAIL)");
         } catch (Exception ipo) {
             System.out.println(ipo.getMessage() + " (PASS)");
@@ -264,7 +264,7 @@ public class Main {
             System.out.println("\t12) Should say false: " + pb.lessThan(pc) + ": " + (!pb.lessThan(pc) ? "(PASS)" : "(FAIL)"));
             System.out.println("\t13) Should say false: " + pc.lessThan(pd) + ": " + (!pc.lessThan(pd) ? "(PASS)" : "(FAIL)"));
             System.out.print("\t14) Should generate an exception with a message: ");
-            pd.greaterOrEqual(null);
+            pd.lessThan(null);
             System.out.println(" (FAIL)");
         } catch (Exception ipo) {
             System.out.println(ipo.getMessage() + " (PASS)");
