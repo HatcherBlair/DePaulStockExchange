@@ -1,4 +1,4 @@
-package Price;
+package product.price;
 
 import java.util.Objects;
 

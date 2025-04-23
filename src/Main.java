@@ -1,4 +1,4 @@
-import Price.*;
+import product.price.*;
 
 public class Main {
 
