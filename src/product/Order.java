@@ -5,7 +5,7 @@ import product.price.Price;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Order implements Tradable{
+public class Order implements Tradable {
 
     private final String user;
     private final String product;
@@ -16,37 +16,24 @@ public class Order implements Tradable{
     private int cancelledVolume;
     private int filledVolume;
     private final String id;
-    Order(String user, String product,
-          Price price, BookSide side,
-          int originalVolume) throws Exception{
-        // User must be 3 letters
-        Pattern pattern = Pattern.compile("^[a-zA-Z]{3}$");
-        Matcher matcher = pattern.matcher(user);
-        if(!matcher.matches()) {
-            throw new Exception("invalid user");
-        }
-        this.user = user;
 
-        // Product must be 1-5 chars/num and can contain .
-        pattern = Pattern.compile("^[a-zA-Z0-9.]{1,5}$");
-        matcher = pattern.matcher(product);
-        if(!matcher.matches()) {
-            throw new Exception("invalid product");
-        }
-        this.product = product;
+    Order(String user, String product, Price price, BookSide side, int originalVolume) throws Exception {
 
-        if(price == null) {
+        this.user = UserValidator.validate(user);
+        this.product = ProductValidator.validate(product);
+
+        if (price == null) {
             throw new Exception("Price cannot be null");
         }
         this.price = price;
 
-        if(side == null) {
+        if (side == null) {
             throw new Exception("Side cannot be null");
         }
         this.side = side;
 
-        if(originalVolume > 10000 || originalVolume < 0) {
-            throw new Exception("Original volume must be between 0 and 10k");
+        if (originalVolume > 10000 || originalVolume <= 0) {
+            throw new Exception("Original volume must be between 1 and 10k");
         }
         this.originalVolume = originalVolume;
         this.remainingVolume = originalVolume;
@@ -56,5 +43,36 @@ public class Order implements Tradable{
 
         this.id = this.user + this.product + this.price.toString() + System.nanoTime();
     }
-    
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public String getProduct() {
+        return this.product;
+    }
+
+    public Price getPrice() {
+        return this.price;
+    }
+
+    public BookSide getSide() {
+        return this.side;
+    }
+
+    public int getOriginalVolume() {
+        return this.originalVolume;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s oder: %s at %s, Orig Vol: %d, Rem Vol: %d, Fill Vol: %d, CXL Vol: %d, ID: %s",
+                this.user, this.side, this.product, this.price.toString(), this.originalVolume,
+                this.remainingVolume, this.filledVolume, this.cancelledVolume, this.id);
+    }
+
+    public TradableDTO makeTradableDTO() {
+        return new TradableDTO(this);
+    }
+
 }
