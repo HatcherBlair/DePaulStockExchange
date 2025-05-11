@@ -7,39 +7,25 @@ import java.util.regex.Pattern;
 
 public class Order implements Tradable {
 
-    private final String user;
-    private final String product;
-    private final Price price;
-    private final BookSide side;
-    private final int originalVolume;
+    private String user;
+    private String product;
+    private Price price;
+    private BookSide side;
+    private int originalVolume;
     private int remainingVolume;
     private int cancelledVolume;
     private int filledVolume;
     private final String id;
 
     Order(String user, String product, Price price, BookSide side, int originalVolume) throws Exception {
-
-        this.user = UserValidator.validate(user);
-        this.product = ProductValidator.validate(product);
-
-        if (price == null) {
-            throw new Exception("Price cannot be null");
-        }
-        this.price = price;
-
-        if (side == null) {
-            throw new Exception("Side cannot be null");
-        }
-        this.side = side;
-
-        if (originalVolume > 10000 || originalVolume <= 0) {
-            throw new Exception("Original volume must be between 1 and 10k");
-        }
-        this.originalVolume = originalVolume;
-        this.remainingVolume = originalVolume;
-
-        this.cancelledVolume = 0;
-        this.filledVolume = 0;
+        setUser(user);
+        setProduct(product);
+        setPrice(price);
+        setSide(side);
+        setOriginalVolume(originalVolume);
+        setRemainingVolume(originalVolume);
+        setCancelledVolume(0);
+        setFilledVolume(0);
 
         this.id = this.user + this.product + this.price.toString() + System.nanoTime();
     }
@@ -48,20 +34,77 @@ public class Order implements Tradable {
         return this.user;
     }
 
+    private void setUser(String user) throws Exception {
+        this.user = UserValidator.validate(user.toUpperCase());
+    }
+
     public String getProduct() {
         return this.product;
+    }
+
+    private void setProduct(String product) throws Exception {
+        this.product = ProductValidator.validate(product.toUpperCase());
     }
 
     public Price getPrice() {
         return this.price;
     }
 
+    private void setPrice(Price price) throws Exception {
+        if (price == null) {
+            throw new Exception("Price cannot be null");
+        }
+        this.price = price;
+    }
+
     public BookSide getSide() {
         return this.side;
     }
 
+    private void setSide(BookSide side) throws Exception {
+        if (side == null) {
+            throw new Exception("Side cannot be null");
+        }
+        this.side = side;
+    }
+
     public int getOriginalVolume() {
         return this.originalVolume;
+    }
+
+    private void setOriginalVolume(int originalVolume) throws Exception {
+        if (originalVolume > 10000 || originalVolume <= 0) {
+            throw new Exception("Original volume must be between 1 and 10k");
+        }
+        this.originalVolume = originalVolume;
+    }
+
+    public int getRemainingVolume() {
+        return this.remainingVolume;
+    }
+
+    public void setRemainingVolume(int remainingVolume) {
+        this.remainingVolume = remainingVolume;
+    }
+
+    public int getFilledVolume() {
+        return this.filledVolume;
+    }
+
+    public void setFilledVolume(int filledVolume) {
+        this.filledVolume = filledVolume;
+    }
+
+    public int getCancelledVolume() {
+        return this.cancelledVolume;
+    }
+
+    public void setCancelledVolume(int cancelledVolume) {
+        this.cancelledVolume = cancelledVolume;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     @Override
