@@ -10,9 +10,9 @@ public class ProductBookSide {
     private final BookSide side;
     private final TreeMap<Price, ArrayList<Tradable>> bookEntries;
 
-    public ProductBookSide(BookSide side) throws Exception {
+    public ProductBookSide(BookSide side) throws InvalidSideException {
         if (side == null) {
-            throw new Exception("Cannot create a book side with a null side");
+            throw new InvalidSideException("Cannot create a book side with a null side");
         }
         this.side = side;
 
@@ -103,7 +103,7 @@ public class ProductBookSide {
         // Can't trade whole book
         int remainder = totalVol;
         for (Tradable t : entries) {
-            double ratio = t.getRemainingVolume() / totalVol;
+            double ratio = (double) t.getRemainingVolume() / (double) totalVol;
             int toTrade = (int) Math.ceil(vol * ratio);
             toTrade = Math.min(toTrade, remainder);
             t.setFilledVolume(t.getFilledVolume() + toTrade);

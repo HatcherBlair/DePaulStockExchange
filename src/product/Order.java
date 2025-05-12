@@ -1,9 +1,7 @@
 package product;
 
+import product.price.InvalidPriceException;
 import product.price.Price;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Order implements Tradable {
 
@@ -34,7 +32,7 @@ public class Order implements Tradable {
         return this.user;
     }
 
-    private void setUser(String user) throws Exception {
+    private void setUser(String user) throws InvalidUserException {
         this.user = UserValidator.validate(user.toUpperCase());
     }
 
@@ -42,7 +40,7 @@ public class Order implements Tradable {
         return this.product;
     }
 
-    private void setProduct(String product) throws Exception {
+    private void setProduct(String product) throws InvalidProductException {
         this.product = ProductValidator.validate(product.toUpperCase());
     }
 
@@ -50,9 +48,9 @@ public class Order implements Tradable {
         return this.price;
     }
 
-    private void setPrice(Price price) throws Exception {
+    private void setPrice(Price price) throws InvalidPriceException {
         if (price == null) {
-            throw new Exception("Price cannot be null");
+            throw new InvalidPriceException("Price cannot be null");
         }
         this.price = price;
     }
@@ -61,9 +59,9 @@ public class Order implements Tradable {
         return this.side;
     }
 
-    private void setSide(BookSide side) throws Exception {
+    private void setSide(BookSide side) throws InvalidSideException {
         if (side == null) {
-            throw new Exception("Side cannot be null");
+            throw new InvalidSideException("Side cannot be null");
         }
         this.side = side;
     }
@@ -72,9 +70,9 @@ public class Order implements Tradable {
         return this.originalVolume;
     }
 
-    private void setOriginalVolume(int originalVolume) throws Exception {
+    private void setOriginalVolume(int originalVolume) throws InvalidVolumeException {
         if (originalVolume > 10000 || originalVolume <= 0) {
-            throw new Exception("Original volume must be between 1 and 10k");
+            throw new InvalidVolumeException("Original volume must be between 1 and 10k");
         }
         this.originalVolume = originalVolume;
     }

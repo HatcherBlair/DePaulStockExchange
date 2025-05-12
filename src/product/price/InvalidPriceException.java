@@ -1,7 +1,7 @@
 package product.price;
 
 public class InvalidPriceException extends Exception {
-    InvalidPriceException(String msg) {
+    public InvalidPriceException(String msg) {
         super(msg);
     }
 }

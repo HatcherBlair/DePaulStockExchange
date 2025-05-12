@@ -7,16 +7,23 @@ public class ProductBook {
     private final ProductBookSide buySide;
     private final ProductBookSide sellSide;
 
-    public ProductBook(String product) throws Exception {
+    public ProductBook(String product) throws InvalidProductException {
         this.product = ProductValidator.validate(product.toUpperCase());
-        this.buySide = new ProductBookSide(BookSide.BUY);
-        this.sellSide = new ProductBookSide(BookSide.SELL);
+
+        try {
+            this.buySide = new ProductBookSide(BookSide.BUY);
+            this.sellSide = new ProductBookSide(BookSide.SELL);
+        } catch (InvalidSideException e) {
+            // This catch will never execute because the buySide and sellSide are always passed a valid side
+            // Need to crash here because otherwise buySide and sellSide might not be initialized
+            throw new RuntimeException("Unable to create ProductBookSide");
+        }
     }
 
-    public TradableDTO add(Tradable t) throws Exception {
+    public TradableDTO add(Tradable t) throws InvalidTradableException {
         System.out.println("**ADD: " + t);
         if (t == null) {
-            throw new Exception("Cannot add a null Tradable to book side");
+            throw new InvalidTradableException("Cannot add a null Tradable to book side");
         }
 
         TradableDTO ret;
@@ -30,9 +37,9 @@ public class ProductBook {
         return ret;
     }
 
-    public TradableDTO[] add(Quote qte) throws Exception {
+    public TradableDTO[] add(Quote qte) throws InvalidQuoteException {
         if (qte == null) {
-            throw new Exception("Cannot add a null Quote to book");
+            throw new InvalidQuoteException("Cannot add a null Quote to book");
         }
 
         removeQuotesForUser(qte.getUser());

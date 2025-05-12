@@ -2,9 +2,6 @@ package product;
 
 import product.price.Price;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Quote {
 
     private final String user;
