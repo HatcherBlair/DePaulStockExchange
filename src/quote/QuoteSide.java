@@ -1,9 +1,13 @@
 package quote;
 
+import order.InvalidVolumeException;
+import price.InvalidPriceException;
 import product.*;
 import price.Price;
 import tradable.Tradable;
 import tradable.TradableDTO;
+import validator.InvalidProductException;
+import validator.InvalidUserException;
 import validator.ProductValidator;
 import validator.UserValidator;
 
@@ -18,7 +22,8 @@ public class QuoteSide implements Tradable {
     private int filledVolume;
     private final String id;
 
-    public QuoteSide(String user, String product, Price price, int originalVolume, BookSide side) throws Exception {
+    public QuoteSide(String user, String product, Price price, int originalVolume, BookSide side)
+            throws InvalidUserException, InvalidProductException, InvalidPriceException, InvalidSideException, InvalidVolumeException {
         setUser(user);
         setProduct(product);
         setPrice(price);
@@ -35,7 +40,7 @@ public class QuoteSide implements Tradable {
         return this.user;
     }
 
-    private void setUser(String user) throws Exception {
+    private void setUser(String user) throws InvalidUserException {
         this.user = UserValidator.validate(user.toUpperCase());
     }
 
@@ -43,7 +48,7 @@ public class QuoteSide implements Tradable {
         return this.product;
     }
 
-    private void setProduct(String product) throws Exception {
+    private void setProduct(String product) throws InvalidProductException {
         this.product = ProductValidator.validate(product.toUpperCase());
     }
 
@@ -51,9 +56,9 @@ public class QuoteSide implements Tradable {
         return this.price;
     }
 
-    private void setPrice(Price price) throws Exception {
+    private void setPrice(Price price) throws InvalidPriceException {
         if (price == null) {
-            throw new Exception("Price cannot be null");
+            throw new InvalidPriceException("Price cannot be null");
         }
         this.price = price;
     }
@@ -62,9 +67,9 @@ public class QuoteSide implements Tradable {
         return this.side;
     }
 
-    private void setSide(BookSide side) throws Exception {
+    private void setSide(BookSide side) throws InvalidSideException {
         if (side == null) {
-            throw new Exception("Side cannot be null");
+            throw new InvalidSideException("Side cannot be null");
         }
         this.side = side;
     }
@@ -73,9 +78,9 @@ public class QuoteSide implements Tradable {
         return this.originalVolume;
     }
 
-    private void setOriginalVolume(int originalVolume) throws Exception {
+    private void setOriginalVolume(int originalVolume) throws InvalidVolumeException {
         if (originalVolume > 10000 || originalVolume <= 0) {
-            throw new Exception("Original volume must be between 1 and 10k");
+            throw new InvalidVolumeException("Original volume must be between 1 and 10k");
         }
         this.originalVolume = originalVolume;
     }

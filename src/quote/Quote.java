@@ -1,6 +1,11 @@
 package quote;
 
+import order.InvalidVolumeException;
+import price.InvalidPriceException;
 import product.BookSide;
+import product.InvalidSideException;
+import validator.InvalidProductException;
+import validator.InvalidUserException;
 import validator.ProductValidator;
 import validator.UserValidator;
 import price.Price;
@@ -12,7 +17,8 @@ public class Quote {
     private final QuoteSide buySide;
     private final QuoteSide sellSide;
 
-    public Quote(String symbol, Price buyPrice, int buyVolume, Price sellPrice, int sellVolume, String userName) throws Exception {
+    public Quote(String symbol, Price buyPrice, int buyVolume, Price sellPrice, int sellVolume, String userName) throws
+            InvalidUserException, InvalidProductException, InvalidPriceException, InvalidVolumeException, InvalidSideException {
 
         this.user = UserValidator.validate(userName);
         this.product = ProductValidator.validate(symbol);
