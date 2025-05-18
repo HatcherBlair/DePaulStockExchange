@@ -15,16 +15,16 @@ public class Price implements Comparable<Price> {
 
     public Price add(Price p) throws InvalidPriceException {
         if (p == null) throw new InvalidPriceException("Cannot add a null price");
-        return new Price(this.cents + p.cents);
+        return PriceFactory.makePrice(this.cents + p.cents);
     }
 
     public Price subtract(Price p) throws InvalidPriceException {
         if (p == null) throw new InvalidPriceException("Cannot subtract a null price");
-        return new Price(this.cents - p.cents);
+        return PriceFactory.makePrice(this.cents - p.cents);
     }
 
     public Price multiply(int n) {
-        return new Price(this.cents * n);
+        return PriceFactory.makePrice(this.cents * n);
     }
 
     public boolean greaterOrEqual(Price p) throws InvalidPriceException {

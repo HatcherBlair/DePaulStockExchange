@@ -1,5 +1,6 @@
 package price;
 
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +16,15 @@ public class PriceFactory {
      *      thing.
      */
     private static final Pattern validPrice = Pattern.compile("^\\$?-?(\\d{1,3}(?:,\\d{3})+|\\d*)(?:\\.|\\.\\d{2})?$");
+    private static final TreeMap<Integer, Price> prices = new TreeMap<>();
 
     public static Price makePrice(int cents) {
-        return new Price(cents);
+        if (prices.containsKey(cents)) {
+            return prices.get(cents);
+        }
+        Price tmp = new Price(cents);
+        prices.put(cents, tmp);
+        return tmp;
     }
 
     public static Price makePrice(String stringValueIn) throws InvalidPriceException {
@@ -32,6 +39,6 @@ public class PriceFactory {
             cleanInput = cleanInput + "00";
         }
         int cents = Integer.parseInt(cleanInput);
-        return new Price(cents);
+        return makePrice(cents);
     }
 }
