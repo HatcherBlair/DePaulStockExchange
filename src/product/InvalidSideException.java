@@ -1,7 +1,7 @@
 package product;
 
 public class InvalidSideException extends Exception {
-    InvalidSideException(String msg) {
+    public InvalidSideException(String msg) {
         super(msg);
     }
 }

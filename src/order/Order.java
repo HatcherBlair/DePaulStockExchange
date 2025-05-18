@@ -1,7 +1,14 @@
-package product;
+package order;
 
-import product.price.InvalidPriceException;
-import product.price.Price;
+import product.*;
+import price.InvalidPriceException;
+import price.Price;
+import tradable.Tradable;
+import tradable.TradableDTO;
+import validator.InvalidProductException;
+import validator.InvalidUserException;
+import validator.ProductValidator;
+import validator.UserValidator;
 
 public class Order implements Tradable {
 
@@ -15,7 +22,7 @@ public class Order implements Tradable {
     private int filledVolume;
     private final String id;
 
-    Order(String user, String product, Price price, BookSide side, int originalVolume) throws Exception {
+    public Order(String user, String product, Price price, BookSide side, int originalVolume) throws Exception {
         setUser(user);
         setProduct(product);
         setPrice(price);

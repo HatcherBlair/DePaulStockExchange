@@ -1,6 +1,9 @@
-package product;
+package quote;
 
-import product.price.Price;
+import product.BookSide;
+import validator.ProductValidator;
+import validator.UserValidator;
+import price.Price;
 
 public class Quote {
 

@@ -1,7 +1,7 @@
-package product;
+package order;
 
 public class InvalidVolumeException extends Exception {
-    InvalidVolumeException(String msg) {
+    public InvalidVolumeException(String msg) {
         super(msg);
     }
 }

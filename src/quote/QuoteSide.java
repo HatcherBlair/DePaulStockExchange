@@ -1,6 +1,11 @@
-package product;
+package quote;
 
-import product.price.Price;
+import product.*;
+import price.Price;
+import tradable.Tradable;
+import tradable.TradableDTO;
+import validator.ProductValidator;
+import validator.UserValidator;
 
 public class QuoteSide implements Tradable {
     private String user;

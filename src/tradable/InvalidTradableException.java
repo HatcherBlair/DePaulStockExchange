@@ -1,7 +1,7 @@
-package product;
+package tradable;
 
 public class InvalidTradableException extends Exception {
-    InvalidTradableException(String msg) {
+    public InvalidTradableException(String msg) {
         super(msg);
     }
 }

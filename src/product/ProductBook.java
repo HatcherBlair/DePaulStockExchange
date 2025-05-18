@@ -1,6 +1,14 @@
 package product;
 
-import product.price.Price;
+import quote.InvalidQuoteException;
+import quote.Quote;
+import price.Price;
+import tradable.InvalidTradableException;
+import tradable.Tradable;
+import tradable.TradableDTO;
+import validator.InvalidProductException;
+import validator.InvalidUserException;
+import validator.ProductValidator;
 
 public class ProductBook {
     private final String product;
@@ -21,10 +29,10 @@ public class ProductBook {
     }
 
     public TradableDTO add(Tradable t) throws InvalidTradableException {
-        System.out.println("**ADD: " + t);
         if (t == null) {
             throw new InvalidTradableException("Cannot add a null Tradable to book side");
         }
+        System.out.println("**ADD: " + t);
 
         TradableDTO ret;
         if (t.getSide() == BookSide.BUY) {
@@ -37,19 +45,23 @@ public class ProductBook {
         return ret;
     }
 
-    public TradableDTO[] add(Quote qte) throws InvalidQuoteException {
+    public TradableDTO[] add(Quote qte) throws InvalidQuoteException, InvalidTradableException {
         if (qte == null) {
             throw new InvalidQuoteException("Cannot add a null Quote to book");
         }
-
-        removeQuotesForUser(qte.getUser());
+        try {
+            removeQuotesForUser(qte.getUser());
+        } catch (InvalidUserException ignored) {
+        }
         TradableDTO buy = buySide.add(qte.getQuoteSide(BookSide.BUY));
         TradableDTO sell = sellSide.add(qte.getQuoteSide(BookSide.SELL));
+        System.out.println("**ADD: " + qte.getQuoteSide(BookSide.BUY));
+        System.out.println("**ADD: " + qte.getQuoteSide(BookSide.SELL));
         tryTrade();
         return new TradableDTO[]{buy, sell};
     }
 
-    public TradableDTO cancel(BookSide side, String orderId) {
+    public TradableDTO cancel(BookSide side, String orderId) throws InvalidTradableException {
         if (side.equals(BookSide.BUY)) {
             return buySide.cancel(orderId);
         } else {
@@ -57,7 +69,10 @@ public class ProductBook {
         }
     }
 
-    public TradableDTO[] removeQuotesForUser(String userName) {
+    public TradableDTO[] removeQuotesForUser(String userName) throws InvalidTradableException, InvalidUserException {
+        if (userName == null) {
+            throw new InvalidUserException("User cannot be null");
+        }
         TradableDTO buy = buySide.removeQuotesForUser(userName);
         TradableDTO sell = sellSide.removeQuotesForUser(userName);
         return new TradableDTO[]{buy, sell};
@@ -102,7 +117,7 @@ public class ProductBook {
             vol = sellSide.topOfBookVolume();
         }
 
-        return String.format("Top of %s book: Top of %s book: %s x %d", side, side, p == null ? "Empty" : p.toString(), vol);
+        return String.format("Top of %s book: %s x %d", side, p == null ? "$0.00" : p.toString(), vol);
     }
 
     @Override

@@ -1,6 +1,9 @@
 package product;
 
-import product.price.Price;
+import price.Price;
+import tradable.InvalidTradableException;
+import tradable.Tradable;
+import tradable.TradableDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +26,10 @@ public class ProductBookSide {
         }
     }
 
-    public TradableDTO add(Tradable o) {
+    public TradableDTO add(Tradable o) throws InvalidTradableException {
+        if (o == null) {
+            throw new InvalidTradableException("Cannot add a null tradable");
+        }
         ArrayList<Tradable> priceEntries = bookEntries.get(o.getPrice());
         if (priceEntries == null) {
             priceEntries = new ArrayList<>();
@@ -34,7 +40,7 @@ public class ProductBookSide {
         return new TradableDTO(o);
     }
 
-    public TradableDTO cancel(String tradableId) {
+    public TradableDTO cancel(String tradableId) throws InvalidTradableException {
         for (Price p : bookEntries.keySet()) {
             ArrayList<Tradable> entries = bookEntries.get(p);
             for (Tradable t : entries) {
@@ -50,10 +56,10 @@ public class ProductBookSide {
                 }
             }
         }
-        return null;
+        throw new InvalidTradableException("Cancelled order doesn't exist");
     }
 
-    public TradableDTO removeQuotesForUser(String userName) {
+    public TradableDTO removeQuotesForUser(String userName) throws InvalidTradableException {
         for (ArrayList<Tradable> entries : bookEntries.values()) {
             for (Tradable t : entries) {
                 if (userName.equals(t.getUser())) {
@@ -94,7 +100,7 @@ public class ProductBookSide {
             for (Tradable t : entries) {
                 t.setFilledVolume(t.getOriginalVolume());
                 t.setRemainingVolume(0);
-                System.out.println("FULL FILL");
+                System.out.printf("FULL FILL: (%s %d) %s%n", t.getSide(), t.getFilledVolume(), t);
             }
             bookEntries.remove(p);
             return;
@@ -108,7 +114,7 @@ public class ProductBookSide {
             toTrade = Math.min(toTrade, remainder);
             t.setFilledVolume(t.getFilledVolume() + toTrade);
             t.setRemainingVolume(t.getRemainingVolume() - toTrade);
-            System.out.println("PARTIAL FILL");
+            System.out.printf("PARTIAL FILL: (%s %d) %s%n", t.getSide(), t.getFilledVolume(), t);
             remainder -= toTrade;
         }
     }

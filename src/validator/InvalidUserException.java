@@ -1,7 +1,7 @@
-package product;
+package validator;
 
 public class InvalidUserException extends Exception {
-    InvalidUserException(String msg) {
+    public InvalidUserException(String msg) {
         super(msg);
     }
 }

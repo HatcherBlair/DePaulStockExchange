@@ -1,4 +1,4 @@
-package product.price;
+package price;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

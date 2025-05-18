@@ -1,7 +1,7 @@
-package product;
+package quote;
 
 public class InvalidQuoteException extends Exception {
-    InvalidQuoteException(String msg) {
+    public InvalidQuoteException(String msg) {
         super(msg);
     }
 }

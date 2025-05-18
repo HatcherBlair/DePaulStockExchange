@@ -1,6 +1,7 @@
-package product;
+package tradable;
 
-import product.price.Price;
+import product.BookSide;
+import price.Price;
 
 public record TradableDTO(String user, String product, Price price, int originalVolume, int remainingVolume,
                           int cancelledVolume, int filledVolume, BookSide side, String tradableId) {
