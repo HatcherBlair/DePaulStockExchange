@@ -22,7 +22,7 @@ public class Order implements Tradable {
     private int filledVolume;
     private final String id;
 
-    public Order(String user, String product, Price price, BookSide side, int originalVolume) throws Exception {
+    public Order(String user, String product, Price price, int originalVolume, BookSide side) throws Exception {
         setUser(user);
         setProduct(product);
         setPrice(price);
@@ -114,7 +114,7 @@ public class Order implements Tradable {
 
     @Override
     public String toString() {
-        return String.format("%s %s oder: %s at %s, Orig Vol: %d, Rem Vol: %d, Fill Vol: %d, CXL Vol: %d, ID: %s",
+        return String.format("%s %s side order: %s at %s, Orig Vol: %3d, Rem Vol: %3d, Fill Vol: %3d, Cxl'd Vol: %3d, ID: %s",
                 this.user, this.side, this.product, this.price.toString(), this.originalVolume,
                 this.remainingVolume, this.filledVolume, this.cancelledVolume, this.id);
     }

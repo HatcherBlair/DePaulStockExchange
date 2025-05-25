@@ -4,6 +4,8 @@ import price.Price;
 import tradable.InvalidTradableException;
 import tradable.Tradable;
 import tradable.TradableDTO;
+import user.DataValidationException;
+import user.UserManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +39,12 @@ public class ProductBookSide {
         priceEntries.add(o);
         bookEntries.put(o.getPrice(), priceEntries);
 
-        return new TradableDTO(o);
+        TradableDTO result = new TradableDTO(o);
+        try {
+            UserManager.getInstance().updateTradable(result.user(), result);
+        } catch (DataValidationException ignored) {
+        }
+        return result;
     }
 
     public TradableDTO cancel(String tradableId) throws InvalidTradableException {
@@ -52,7 +59,12 @@ public class ProductBookSide {
                     if (entries.isEmpty()) {
                         bookEntries.remove(p);
                     }
-                    return new TradableDTO(t);
+                    TradableDTO result = new TradableDTO(t);
+                    try {
+                        UserManager.getInstance().updateTradable(result.user(), result);
+                    } catch (DataValidationException ignored) {
+                    }
+                    return result;
                 }
             }
         }
@@ -63,7 +75,12 @@ public class ProductBookSide {
         for (ArrayList<Tradable> entries : bookEntries.values()) {
             for (Tradable t : entries) {
                 if (userName.equals(t.getUser())) {
-                    return cancel(t.getId());
+                    TradableDTO result = cancel(t.getId());
+                    try {
+                        UserManager.getInstance().updateTradable(result.user(), result);
+                    } catch (DataValidationException ignored) {
+                    }
+                    return result;
                 }
             }
         }
@@ -98,16 +115,22 @@ public class ProductBookSide {
         // We can trade entire book
         if (vol >= totalVol) {
             for (Tradable t : entries) {
-                t.setFilledVolume(t.getOriginalVolume());
+                int temp = t.getRemainingVolume();
+                t.setFilledVolume(t.getFilledVolume() + temp);
                 t.setRemainingVolume(0);
-                System.out.printf("FULL FILL: (%s %d) %s%n", t.getSide(), t.getFilledVolume(), t);
+                System.out.printf("FULL FILL: (%s %d) %s%n", t.getSide(), temp, t);
+                try {
+                    UserManager.getInstance().updateTradable(t.getUser(), t.makeTradableDTO());
+                } catch (DataValidationException ignored) {
+                    // We are making valid data straight from the tradable, it will never be invalid
+                }
             }
             bookEntries.remove(p);
             return;
         }
 
         // Can't trade whole book
-        int remainder = totalVol;
+        int remainder = vol;
         for (Tradable t : entries) {
             double ratio = (double) t.getRemainingVolume() / (double) totalVol;
             int toTrade = (int) Math.ceil(vol * ratio);
@@ -116,6 +139,11 @@ public class ProductBookSide {
             t.setRemainingVolume(t.getRemainingVolume() - toTrade);
             System.out.printf("PARTIAL FILL: (%s %d) %s%n", t.getSide(), t.getFilledVolume(), t);
             remainder -= toTrade;
+            try {
+                UserManager.getInstance().updateTradable(t.getUser(), t.makeTradableDTO());
+            } catch (DataValidationException ignored) {
+                // We are making valid data straight from the tradable, it will never be invalid.
+            }
         }
     }
 

@@ -29,7 +29,24 @@ public class UserManager {
         }
     }
 
-    public void updateTradable(String userId, TradableDTO o) {
+    public void updateTradable(String userId, TradableDTO o) throws DataValidationException {
+        if (userId == null || !users.containsKey(userId)) {
+            throw new DataValidationException("UserId does not exist: " + userId);
+        }
 
+        if (o == null) {
+            throw new DataValidationException("Cannot update a null tradable");
+        }
+
+        users.get(userId).updateTradable(o);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (User user : users.values()) {
+            sb.append(user.toString());
+        }
+        return sb.toString();
     }
 }

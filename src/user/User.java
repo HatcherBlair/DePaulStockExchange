@@ -29,14 +29,15 @@ public class User {
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
-        ret.append(String.format("User Id: %s\n", this.userId));
+        ret.append(String.format("\tUser Id: %s\n", this.userId));
         for (TradableDTO tradable : this.tradables.values()) {
-            ret.append(String.format("\tProduct: %s, Price: %s, OriginalVolume: %d, RemainingVolume: %d, " +
+            ret.append(String.format("\t\tProduct: %s, Price: %s, OriginalVolume: %d, RemainingVolume: %d, " +
                             "CancelledVolume: %d, FilledVolume: %d, User: %s, Side: %s, Id: %s\n",
                     tradable.product(), tradable.price(), tradable.originalVolume(), tradable.remainingVolume(),
                     tradable.cancelledVolume(), tradable.filledVolume(), tradable.user(), tradable.side(),
                     tradable.tradableId()));
         }
+        ret.append("\n");
         return ret.toString();
     }
 }
