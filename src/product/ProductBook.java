@@ -1,5 +1,6 @@
 package product;
 
+import market.CurrentMarketTracker;
 import quote.InvalidQuoteException;
 import quote.Quote;
 import price.Price;
@@ -42,6 +43,7 @@ public class ProductBook {
         }
 
         tryTrade();
+        updateMarket();
         return ret;
     }
 
@@ -58,15 +60,19 @@ public class ProductBook {
         System.out.println("**ADD: " + qte.getQuoteSide(BookSide.BUY));
         System.out.println("**ADD: " + qte.getQuoteSide(BookSide.SELL));
         tryTrade();
+        updateMarket();
         return new TradableDTO[]{buy, sell};
     }
 
     public TradableDTO cancel(BookSide side, String orderId) throws InvalidTradableException {
         if (side.equals(BookSide.BUY)) {
+            updateMarket();
             return buySide.cancel(orderId);
         } else {
+            updateMarket();
             return sellSide.cancel(orderId);
         }
+
     }
 
     public TradableDTO[] removeQuotesForUser(String userName) throws InvalidTradableException, InvalidUserException {
@@ -75,6 +81,7 @@ public class ProductBook {
         }
         TradableDTO buy = buySide.removeQuotesForUser(userName);
         TradableDTO sell = sellSide.removeQuotesForUser(userName);
+        updateMarket();
         return new TradableDTO[]{buy, sell};
     }
 
@@ -118,6 +125,11 @@ public class ProductBook {
         }
 
         return String.format("Top of %s book: %s x %d", side, p == null ? "$0.00" : p.toString(), vol);
+    }
+
+    private void updateMarket() {
+        CurrentMarketTracker.getInstance().updateMarket(this.product, this.buySide.topOfbookPrice(),
+                this.buySide.topOfBookVolume(), this.sellSide.topOfbookPrice(), this.sellSide.topOfBookVolume());
     }
 
     @Override

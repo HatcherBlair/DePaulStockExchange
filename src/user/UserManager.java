@@ -49,4 +49,12 @@ public class UserManager {
         }
         return sb.toString();
     }
+
+    public User getUser(String userId) throws InvalidUserException {
+        User ret = users.get(userId);
+        if (ret == null) {
+            throw new InvalidUserException("User id doesn't exist");
+        }
+        return ret;
+    }
 }

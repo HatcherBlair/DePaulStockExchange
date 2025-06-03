@@ -1,14 +1,19 @@
 package user;
 
+import market.CurrentMarketObserver;
+import market.CurrentMarketSide;
 import tradable.TradableDTO;
 import validator.InvalidUserException;
 import validator.UserValidator;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class User {
+public class User implements CurrentMarketObserver {
     private String userId;
     private final HashMap<String, TradableDTO> tradables = new HashMap<>();
+    private final HashMap<String, CurrentMarketSide[]> currentMarkets = new HashMap<>();
 
     public User(String userId) throws InvalidUserException {
         setUserId(userId);
@@ -39,5 +44,19 @@ public class User {
         }
         ret.append("\n");
         return ret.toString();
+    }
+
+    @Override
+    public void updateCurrentMarket(String symbol, CurrentMarketSide buySide, CurrentMarketSide sellSide) {
+        this.currentMarkets.put(symbol, new CurrentMarketSide[]{buySide, sellSide});
+    }
+
+    public String getCurrentMarkets() {
+        StringBuilder sb = new StringBuilder();
+        for (String symbol : currentMarkets.keySet()) {
+            CurrentMarketSide[] sides = currentMarkets.get(symbol);
+            sb.append(String.format("%s\t%s - %s\n", symbol, sides[0], sides[1]));
+        }
+        return sb.toString();
     }
 }
