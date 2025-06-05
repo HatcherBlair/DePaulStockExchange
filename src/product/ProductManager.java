@@ -104,12 +104,17 @@ public class ProductManager {
 
         ProductBook book = productBooks.get(symbol);
         TradableDTO[] result = book.removeQuotesForUser(user);
-        if (result[0] == null) {
+        if (result[0] == null && result[1] == null) {
             throw new DataValidationException("Product does not exist: " + symbol);
         }
 
-        UserManager.getInstance().updateTradable(result[0].user(), result[0]);
-        UserManager.getInstance().updateTradable(result[1].user(), result[1]);
+        // If either of these is null it means that side of the quote has been filled, no need to update the tradable
+        if (result[0] != null) {
+            UserManager.getInstance().updateTradable(result[0].user(), result[0]);
+        }
+        if (result[1] != null) {
+            UserManager.getInstance().updateTradable(result[1].user(), result[1]);
+        }
 
         return result;
     }

@@ -56,6 +56,7 @@ public class ProductBook {
         } catch (InvalidUserException ignored) {
         }
         TradableDTO buy = buySide.add(qte.getQuoteSide(BookSide.BUY));
+        updateMarket();
         TradableDTO sell = sellSide.add(qte.getQuoteSide(BookSide.SELL));
         System.out.println("**ADD: " + qte.getQuoteSide(BookSide.BUY));
         System.out.println("**ADD: " + qte.getQuoteSide(BookSide.SELL));
@@ -65,14 +66,14 @@ public class ProductBook {
     }
 
     public TradableDTO cancel(BookSide side, String orderId) throws InvalidTradableException {
+        TradableDTO ret;
         if (side.equals(BookSide.BUY)) {
-            updateMarket();
-            return buySide.cancel(orderId);
+            ret = buySide.cancel(orderId);
         } else {
-            updateMarket();
-            return sellSide.cancel(orderId);
+            ret = sellSide.cancel(orderId);
         }
-
+        updateMarket();
+        return ret;
     }
 
     public TradableDTO[] removeQuotesForUser(String userName) throws InvalidTradableException, InvalidUserException {

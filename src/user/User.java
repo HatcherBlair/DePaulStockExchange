@@ -23,6 +23,10 @@ public class User implements CurrentMarketObserver {
         this.userId = UserValidator.validate(userId);
     }
 
+    public String getUserId() {
+        return this.userId;
+    }
+
     public void updateTradable(TradableDTO o) {
         if (o == null) {
             return;
